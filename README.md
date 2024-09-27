@@ -28,3 +28,7 @@ This Chrome extension provides AI-generated message replies within LinkedIn chat
 
 
 
+
+https://github.com/user-attachments/assets/1dc1e86f-bd6f-46e4-aa02-2e62ee056bdb
+
+
