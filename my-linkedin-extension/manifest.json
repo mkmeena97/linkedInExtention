@@ -9,7 +9,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*.linkedin.com/*"],
+      "matches": ["https://*.linkedin.com/messaging/thread/*"],
       "js": ["content.js"]
     }
   ],
