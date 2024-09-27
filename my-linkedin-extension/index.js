@@ -1,9 +1,7 @@
-
 console.log('LinkedIn AI Reply Generator extension loaded');
 
 document.addEventListener('focusin', (event) => {
     if (event.target && event.target.tagName === 'TEXTAREA') {
-
         showAIIcon(event.target);
     }
 });
@@ -17,7 +15,7 @@ function showAIIcon(inputElement) {
     aiIcon.style.height = '20px';
     aiIcon.style.top = `${inputElement.offsetTop}px`;
     aiIcon.style.left = `${inputElement.offsetLeft + inputElement.offsetWidth - 25}px`;
-    
+
     aiIcon.addEventListener('click', () => {
         openModal();
     });
@@ -29,7 +27,6 @@ function showAIIcon(inputElement) {
     });
 }
 
-// Function to open a modal when the AI icon is clicked
 function openModal() {
     const modal = document.createElement('div');
     modal.style.position = 'fixed';
@@ -48,7 +45,7 @@ function openModal() {
     const generateButton = document.createElement('button');
     generateButton.innerText = 'Generate';
     generateButton.style.marginLeft = '10px';
-    
+
     generateButton.addEventListener('click', () => {
         alert('Thank you for the opportunity! If you have any more questions or if there\'s anything else I can help you with, feel free to ask.');
     });
