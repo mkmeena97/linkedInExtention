@@ -11,6 +11,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             target: { tabId: tabId },
             files: ['content.js']
         }, () => {
+            console.log("Content script injected");
             // Now send message to content script after injection
             chrome.tabs.sendMessage(tabId, {
                 type: "NEW",

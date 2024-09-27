@@ -1,8 +1,6 @@
 (() => {
     console.log("content.js loaded"); // Safe to log here
 
-    // Your existing code
-    let linkedinChatGenerator;
     let currentChat = "";
 
     chrome.runtime.onMessage.addListener((obj, sender, sendResponse) => {
@@ -12,43 +10,55 @@
             currentChat = chatId;
             console.log("New Chat Loaded:", chatId);
             newChatLoaded();
-
-            // Respond back to the background script
             sendResponse({ status: "Content script received message successfully" });
         }
     });
 
     function newChatLoaded() {
         console.log("newChatLoaded function triggered");
-        const inputField = document.querySelector('.msg-form__contenteditable');
 
-        if (inputField) {
-            console.log("Message input field found:", inputField);
-            showAIIcon(inputField);
-        } else {
-            console.log("No message input field found!");
-        }
+        // Set up a MutationObserver to watch for the input field
+        const observer = new MutationObserver(() => {
+            const inputField = document.querySelector('div[contenteditable="true"].msg-form__contenteditable');
+            if (inputField) {
+                showAIIcon(inputField);
+                observer.disconnect(); // Stop observing once found
+            } else {
+                console.log("No message input field found yet!");
+            }
+        });
+
+        // Start observing the body for added nodes
+        observer.observe(document.body, { childList: true, subtree: true });
     }
 
     function showAIIcon(inputElement) {
+        // Check if AI icon already exists to avoid duplication
+        if (document.querySelector('#ai-icon')) {
+            return; // Exit if the icon already exists
+        }
+
+        // Create AI icon
         const aiIcon = document.createElement('img');
-        aiIcon.src = chrome.runtime.getURL('public/icons/ai-icon.svg'); 
+        aiIcon.src = chrome.runtime.getURL('public/icons/ai-icon.svg');
+        aiIcon.id = 'ai-icon'; // Add an ID for reference
+
+        // Set the styling to position the icon in the bottom left
         aiIcon.style.position = 'absolute';
         aiIcon.style.cursor = 'pointer';
         aiIcon.style.width = '20px';
         aiIcon.style.height = '20px';
-        aiIcon.style.top = `${inputElement.offsetTop}px`;
-        aiIcon.style.left = `${inputElement.offsetLeft + inputElement.offsetWidth - 25}px`;
+        aiIcon.style.bottom = '5px'; // Position from the bottom
+        aiIcon.style.right = '5px';   // Position from the left
 
-        aiIcon.addEventListener('click', () => {
-            openModal();
-        });
+        // Add click event to open the modal
+        aiIcon.onclick = () => {
+            console.log('AI icon clicked!'); // Log when the icon is clicked
+            openModal(); // Open the modal for message input
+        };
 
-        document.body.appendChild(aiIcon);
-
-        inputElement.addEventListener('focusout', () => {
-            aiIcon.remove();
-        });
+        // Append the icon to the input element's parent
+        inputElement.parentElement.appendChild(aiIcon); // Append the icon to the parent container
     }
 
     function openModal() {
@@ -61,26 +71,57 @@
         modal.style.padding = '20px';
         modal.style.boxShadow = '0px 0px 10px rgba(0, 0, 0, 0.1)';
         modal.style.zIndex = '1000';
+        modal.style.width = '500px'; // Increased width
+        modal.style.height = '300px'; // Increased height
+        modal.style.overflow = 'auto'; // Allow scrolling if needed
 
         const inputField = document.createElement('input');
         inputField.type = 'text';
-        inputField.placeholder = 'Enter your command...';
+        inputField.placeholder = 'Generated message will appear here...';
+        inputField.style.width = '100%'; // Full width of modal
+        inputField.style.marginBottom = '10px'; // Space below the input
 
         const generateButton = document.createElement('button');
         generateButton.innerText = 'Generate';
-        generateButton.style.marginLeft = '10px';
+        generateButton.style.marginRight = '10px';
 
+        const insertButton = document.createElement('button');
+        insertButton.innerText = 'Insert';
+
+        // Function to handle generating the response
         generateButton.addEventListener('click', () => {
-            alert('Generated reply: Thank you for the opportunity! If you have any more questions or if there\'s anything else I can help you with, feel free to ask.');
+            const generatedReply = 'Thank you for the opportunity! If you have any more questions or if there\'s anything else I can help you with, feel free to ask.';
+            inputField.value = generatedReply; // Set the generated message in the input field
+        });
+
+        // Function to handle inserting the text into LinkedIn's message box
+        insertButton.addEventListener('click', () => {
+            const message = inputField.value;
+            if (message) {
+                // Find the LinkedIn message input field
+                const linkedinInput = document.querySelector('div[contenteditable="true"].msg-form__contenteditable');
+                if (linkedinInput) {
+                    // Set the inner text to the input field
+                    linkedinInput.innerText = message;
+                    // Trigger input event for LinkedIn to recognize the change
+                    linkedinInput.dispatchEvent(new Event('input', { bubbles: true })); 
+                    modal.remove(); // Close modal after insertion
+                } else {
+                    alert('Message input field not found!');
+                }
+            } else {
+                alert('Please generate a message before inserting.'); // Alert if the input is empty
+            }
         });
 
         modal.appendChild(inputField);
         modal.appendChild(generateButton);
-
+        modal.appendChild(insertButton);
         document.body.appendChild(modal);
 
+        // Close modal on click outside
         document.addEventListener('click', (event) => {
-            if (!modal.contains(event.target)) {
+            if (!modal.contains(event.target) && !document.querySelector('#ai-icon').contains(event.target)) {
                 modal.remove();
             }
         }, { once: true });
