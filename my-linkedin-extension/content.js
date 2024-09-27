@@ -63,6 +63,7 @@
 
     function openModal() {
         const modal = document.createElement('div');
+        modal.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 shadow-lg rounded-lg z-999 w-96 h-64 overflow-auto';
         modal.style.position = 'fixed';
         modal.style.top = '50%';
         modal.style.left = '50%';
@@ -81,12 +82,30 @@
         inputField.style.width = '100%'; // Full width of modal
         inputField.style.marginBottom = '10px'; // Space below the input
 
-        const generateButton = document.createElement('button');
-        generateButton.innerText = 'Generate';
-        generateButton.style.marginRight = '10px';
+    // Create the generate button with custom styles
+    const generateButton = document.createElement('button');
+    generateButton.innerText = 'Generate';
+    generateButton.style.marginRight = '10px'; // Adds spacing between buttons
+    generateButton.style.border = '1px solid black'; // Black border
+    generateButton.style.padding = '8px 16px'; // Padding for button
+    generateButton.style.backgroundColor = '#4CAF50'; // Green background
+    generateButton.style.color = 'white'; // White text color
+    generateButton.style.borderRadius = '5px'; // Rounded corners
+    generateButton.style.cursor = 'pointer'; // Cursor pointer for hover effect
+    generateButton.style.fontSize = '14px'; // Font size
+    generateButton.style.fontWeight = 'bold'; // Bold text
 
-        const insertButton = document.createElement('button');
-        insertButton.innerText = 'Insert';
+    // Create the insert button with custom styles
+    const insertButton = document.createElement('button');
+    insertButton.innerText = 'Insert';
+    insertButton.style.border = '1px solid black'; // Black border
+    insertButton.style.padding = '8px 16px'; // Padding for button
+    insertButton.style.backgroundColor = '#008CBA'; // Blue background
+    insertButton.style.color = 'white'; // White text color
+    insertButton.style.borderRadius = '5px'; // Rounded corners
+    insertButton.style.cursor = 'pointer'; // Cursor pointer for hover effect
+    insertButton.style.fontSize = '14px'; // Font size
+    insertButton.style.fontWeight = 'bold'; // Bold text
 
         // Function to handle generating the response
         generateButton.addEventListener('click', () => {
