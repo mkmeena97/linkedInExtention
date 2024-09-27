@@ -11,7 +11,7 @@ This Chrome extension provides AI-generated message replies within LinkedIn chat
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/linkedin-ai-reply-extension.git
+   [git clone https://github.com/your-username/linkedin-ai-reply-extension.git](https://github.com/mkmeena97/linkedInExtention.git)
    ```
 2. Open Chrome and go to chrome://extensions/.
 
