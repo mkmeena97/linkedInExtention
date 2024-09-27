@@ -1,25 +1,32 @@
 (() => {
+    console.log("content.js loaded"); // Safe to log here
+
+    // Your existing code
     let linkedinChatGenerator;
     let currentChat = "";
 
-    chrome.runtime.onMessage.addListener((obj, sender, response) => {
+    chrome.runtime.onMessage.addListener((obj, sender, sendResponse) => {
         const { type, chatId } = obj;
+
         if (type === "NEW") {
             currentChat = chatId;
             console.log("New Chat Loaded:", chatId);
             newChatLoaded();
+
+            // Respond back to the background script
+            sendResponse({ status: "Content script received message successfully" });
         }
     });
 
-    // Function to handle new chat loading
     function newChatLoaded() {
+        console.log("newChatLoaded function triggered");
         const inputField = document.querySelector('.msg-form__contenteditable');
 
         if (inputField) {
-            console.log("Message input field found:", inputField); // Log when input field is found
+            console.log("Message input field found:", inputField);
             showAIIcon(inputField);
         } else {
-            console.log("No message input field found!"); // Log when no input field is found
+            console.log("No message input field found!");
         }
     }
 
